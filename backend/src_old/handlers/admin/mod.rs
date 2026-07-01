@@ -1,0 +1,15 @@
+pub mod achievements;
+pub mod analytics;
+pub mod blog;
+pub mod certifications;
+pub mod contact;
+pub mod education;
+pub mod experience;
+pub mod learning;
+pub mod personal;
+pub mod projects;
+pub mod resume;
+pub mod settings;
+pub mod skills;
+pub mod social_links;
+pub mod tech_stack;

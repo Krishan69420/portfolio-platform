@@ -1,0 +1,41 @@
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Rust
+target/
+Cargo.lock
+
+# Node
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+
+# Uploads (user data — never commit)
+uploads/
+backend/uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker volumes (local dev)
+docker/certbot/
+
+# Misc
+coverage/
+.nyc_output/
