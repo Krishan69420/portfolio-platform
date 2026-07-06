@@ -11,7 +11,7 @@ pub async fn find_by_email(
         SELECT *
         FROM users
         WHERE email = $1
-        "#,
+        "#
     )
     .bind(email)
     .fetch_one(pool)

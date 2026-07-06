@@ -10,6 +10,7 @@ use crate::{
     models::LoginRequest,
     services,
     state::AppState,
+    utils::jwt,
 };
 
 pub async fn login(
@@ -17,7 +18,7 @@ pub async fn login(
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<serde_json::Value>, StatusCode> {
 
-    services::auth::authenticate(
+    let user = services::auth::authenticate(
         &state.db,
         &payload.email,
         &payload.password,
@@ -25,8 +26,18 @@ pub async fn login(
     .await
     .map_err(|_| StatusCode::UNAUTHORIZED)?;
 
+    let token = jwt::generate_token(
+        user.id,
+        &user.email,
+        &user.role,
+        &state.config.jwt_secret,
+    )
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
     Ok(Json(json!({
         "success": true,
-        "message": "Login successful"
+        "message": "Login successful",
+        "access_token": token,
+        "token_type": "Bearer"
     })))
 }

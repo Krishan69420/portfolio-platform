@@ -1,6 +1,7 @@
 use sqlx::PgPool;
 
 use crate::{
+    models::User,
     repositories::user,
     utils::password,
 };
@@ -9,7 +10,7 @@ pub async fn authenticate(
     pool: &PgPool,
     email: &str,
     password: &str,
-) -> Result<(), &'static str> {
+) -> Result<User, &'static str> {
 
     println!("Trying login for: {}", email);
 
@@ -32,5 +33,5 @@ pub async fn authenticate(
 
     println!("Login successful!");
 
-    Ok(())
+    Ok(user)
 }
