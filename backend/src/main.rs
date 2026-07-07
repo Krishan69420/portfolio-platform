@@ -39,6 +39,9 @@ async fn health() -> Json<HealthResponse> {
         version: "1.0.0".into(),
     })
 }
+async fn admin_test() -> &'static str {
+    "Welcome Admin!"
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -57,15 +60,29 @@ async fn main() -> anyhow::Result<()> {
         config: config.clone(),
     };
 
-    let app = Router::new()
+    let public_routes = Router::new()
     .route("/health", get(health))
     .route(
         "/api/portfolio/personal",
         get(handlers::portfolio::get_personal_info),
-    ).route(
-    "/api/auth/login",
-    post(handlers::auth::login),
-)
+    )
+    .route(
+        "/api/auth/login",
+        post(handlers::auth::login),
+    );
+
+let admin_routes = Router::new()
+    .route("/api/admin/test", get(admin_test))
+    .route_layer(
+        axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::auth::require_auth,
+        )
+    );
+
+let app = Router::new()
+    .merge(public_routes)
+    .merge(admin_routes)
     .layer(CorsLayer::new().allow_origin(config.allowed_origins()))
     .layer(TraceLayer::new_for_http())
     .with_state(state);
