@@ -10,7 +10,7 @@ mod repositories;
 mod services;
 
 use axum::{
-    routing::{get, post},
+    routing::{get, post, put, delete},
     Json,
     Router,
 };
@@ -69,16 +69,60 @@ async fn main() -> anyhow::Result<()> {
     .route(
         "/api/auth/login",
         post(handlers::auth::login),
-    );
+    )
+    .route(
+    "/api/projects",
+    get(handlers::project::get_all_projects),
+    )
+    .route(
+    "/api/projects/:id",
+    get(handlers::project::get_project_by_id),
+    )
+    .route(
+    "/api/projects/slug/:slug",
+    get(handlers::project::get_project_by_slug),
+).route(
+    "/api/skills",
+    get(handlers::skill::get_all_skills),
+)
+.route(
+    "/api/skills/:id",
+    get(handlers::skill::get_skill_by_id),
+);
 
 let admin_routes = Router::new()
     .route("/api/admin/test", get(admin_test))
+
+    .route(
+        "/api/admin/projects",
+        post(handlers::project::create_project),
+    )
+
     .route_layer(
         axum::middleware::from_fn_with_state(
             state.clone(),
             middleware::auth::require_auth,
         )
-    );
+    )
+    .route(
+    "/api/admin/projects/:id",
+    put(handlers::project::update_project),
+    )
+    .route(
+    "/api/admin/projects/:id",
+    delete(handlers::project::delete_project),
+    ).route(
+    "/api/admin/skills",
+    post(handlers::skill::create_skill),
+)
+.route(
+    "/api/admin/skills/:id",
+    delete(handlers::skill::delete_skill),
+)
+.route(
+    "/api/admin/skills/:id",
+    put(handlers::skill::update_skill),
+);
 
 let app = Router::new()
     .merge(public_routes)
