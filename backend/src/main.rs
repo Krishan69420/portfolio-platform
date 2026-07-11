@@ -88,6 +88,28 @@ async fn main() -> anyhow::Result<()> {
 .route(
     "/api/skills/:id",
     get(handlers::skill::get_skill_by_id),
+)
+.route(
+    "/api/experience",
+    get(handlers::experience::get_all_experience),
+)
+.route(
+    "/api/experience/:id",
+    get(handlers::experience::get_experience_by_id),
+).route(
+    "/api/education",
+    get(handlers::education::get_all_education),
+)
+.route(
+    "/api/education/:id",
+    get(handlers::education::get_education_by_id),
+).route(
+    "/api/certifications",
+    get(handlers::certification::get_all_certifications),
+)
+.route(
+    "/api/certifications/:id",
+    get(handlers::certification::get_certification_by_id),
 );
 
 let admin_routes = Router::new()
@@ -122,8 +144,50 @@ let admin_routes = Router::new()
 .route(
     "/api/admin/skills/:id",
     put(handlers::skill::update_skill),
+)
+.route(
+    "/api/admin/experience",
+    post(handlers::experience::create_experience),
+)
+.route(
+    "/api/admin/experience/:id",
+    put(handlers::experience::update_experience),
+)
+.route(
+    "/api/admin/experience/:id",
+    delete(handlers::experience::delete_experience),
+).route(
+    "/api/admin/education",
+    post(handlers::education::create_education),
+)
+.route(
+    "/api/admin/education/:id",
+    put(handlers::education::update_education),
+)
+.route(
+    "/api/admin/education/:id",
+    delete(handlers::education::delete_education),
+)
+.route(
+    "/api/admin/education",
+    delete(handlers::education::delete_all_education),
+)
+.route(
+    "/api/admin/certifications",
+    post(handlers::certification::create_certification),
+)
+.route(
+    "/api/admin/certifications/:id",
+    put(handlers::certification::update_certification),
+)
+.route(
+    "/api/admin/certifications/:id",
+    delete(handlers::certification::delete_certification),
+)
+.route(
+    "/api/admin/certifications",
+    delete(handlers::certification::delete_all_certifications),
 );
-
 let app = Router::new()
     .merge(public_routes)
     .merge(admin_routes)
